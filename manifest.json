@@ -1,10 +1,7 @@
 {
     "name": "Current Price Indicator",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "title": "Highstocks Current Price Indicator",
-    "demo": [
-        "http://jsfiddle.net/RolandBanguiran/nf7ne/"
-    ],
     "author": {
         "name": "Roland Banguiran",
         "url": "http://sg.linkedin.com/in/rolandbanguiran"
