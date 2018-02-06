@@ -20,13 +20,7 @@ yAxis: {
     x: 0, //offset
     y: 0, //offset
     zIndex: 7,
-	labelFormatter: null		//advanced price to text formatter
+    labelFormatter: null		//advanced price to text formatter
   }
 }
 </pre>
-
-Demo: http://www.highcharts.com/plugin-registry/single/28/Current%20Price%20Indicator
-
-Donate
----
-Bitcoin to <code>15dv1MW6LrArfzrzq46mPscjce7vLUfaBR</code>
