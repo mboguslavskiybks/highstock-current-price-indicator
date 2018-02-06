@@ -9,11 +9,11 @@
 // JSLint options:
 /*global Highcharts, document */
 
-(function(H) {
+(function (H) {
     'use strict';
     var merge = H.merge;
 
-    H.wrap(H.Chart.prototype, 'init', function(proceed) {
+    H.wrap(H.Chart.prototype, 'init', function (proceed) {
 
         // Run the original proceed method
         proceed.apply(this, Array.prototype.slice.call(arguments, 1));
@@ -21,7 +21,7 @@
         renderCurrentPriceIndicator(this);
     });
 
-    H.wrap(H.Chart.prototype, 'redraw', function(proceed) {
+    H.wrap(H.Chart.prototype, 'redraw', function (proceed) {
 
         // Run the original proceed method
         proceed.apply(this, Array.prototype.slice.call(arguments, 1));
@@ -32,25 +32,26 @@
     function getCurrentPrice(chart) {
 
         var chartSeries = chart.series;
-        var priceSeries = chartSeries[0];
-        var priceData = priceSeries.yData;
-
         var currentPrice = 0.0;
-        if (priceData.length > 0) {
-            switch (priceSeries.type) {
-                case 'line':
-                case 'spline':
-				case 'area':
-                    currentPrice = priceData[priceData.length - 1];
-                    break;
-                default:
-                    //FIXME: add more types processing - default for OHLC
-                    currentPrice = priceData[priceData.length - 1][3];
-                    break;
+        if (chartSeries.length > 0) {
+            var priceSeries = chartSeries[0];
+            var priceData = priceSeries.yData;
+            if (priceData.length > 0) {
+                var type = (priceSeries.type) ? priceSeries.type : 'area';
+                switch (type) {
+                    case 'line':
+                    case 'spline':
+                    case 'area':
+                        currentPrice = priceData[priceData.length - 1];
+                        break;
+                    default:
+                        //FIXME: add more types processing - default for OHLC
+                        currentPrice = priceData[priceData.length - 1][3];
+                        break;
+                }
             }
         }
-
-        return currentPrice;
+        return (typeof currentPrice === 'undefined' || currentPrice === null) ? 0.0 : currentPrice;
     }
 
     function renderCurrentPriceIndicator(chart) {
@@ -73,7 +74,7 @@
                 style: {
                     color: '#ffffff',
                     fontSize: '11px',
-					fontFamily: ''
+                    fontFamily: ''
                 },
                 x: 0,
                 y: 0,
@@ -104,7 +105,7 @@
 
         var currentPriceTxt = options.labelFormatter ? options.labelFormatter(currentPrice) : ('' + currentPrice);
 
-        y = priceYAxis.toPixels(currentPrice);
+        y = priceYAxis.toPixels(currentPrice) ? priceYAxis.toPixels(currentPrice) : 0;
         y += options.y;
 
         lineFrom = priceYAxis.opposite ? marginLeft : chartWidth - marginRight;
@@ -115,7 +116,6 @@
         x = priceYAxis.opposite ? chartWidth - width : marginLeft;
         // offset
         x += options.x;
-        
         */
 
         if (options.enabled) {
@@ -134,7 +134,7 @@
                     .css({
                         color: options.style.color,
                         fontSize: options.style.fontSize,
-						fontFamily: options.style.fontFamily
+                        fontFamily: options.style.fontFamily
                     }).add(group);
 
                 var labelBBox = label.getBBox();
@@ -150,16 +150,16 @@
                 });
 
                 // box
-                box = renderer.path([  'M', x-6, y, 
-									   'L', x, y- (height / 2) - 2, 
-									   'L', x+width+4, y- (height / 2) - 2, 
-									   'L', x+width+4, y+ (height / 2), 
-									   'L', x, y+ (height / 2), 
-									   'Z'
-									   ])
+                box = renderer.path(['M', x - 6, y,
+                    'L', x, y - (height / 2) - 2,
+                    'L', x + width + 4, y - (height / 2) - 2,
+                    'L', x + width + 4, y + (height / 2),
+                    'L', x, y + (height / 2),
+                    'Z'
+                ])
                     .attr({
                         stroke: options.borderColor,
-						'stroke-width': 1,
+                        'stroke-width': 1,
                         opacity: options.lineOpacity,
                         fill: options.backgroundColor,
                         zIndex: 1
@@ -167,13 +167,13 @@
                     .add(group);
 
                 // box
-                line = renderer.path(['M', lineFrom, y, 'L', x-6, y])
+                line = renderer.path(['M', lineFrom, y, 'L', x - 6, y])
                     .attr({
                         stroke: options.lineColor,
                         'stroke-dasharray': dashStyleToArray(options.lineDashStyle, 1),
                         'stroke-width': 1,
                         opacity: options.lineOpacity,
-                        zIndex: 1,
+                        zIndex: 1
                     })
                     .add(group);
 
@@ -199,17 +199,17 @@
                 }, 0);
 
                 currentPriceIndicator.box.animate({
-                    d: [  	'M', x-6, y, 
-							'L', x, y- (height / 2) - 2, 
-							'L', x+width+4, y- (height / 2) - 2, 
-							'L', x+width+4, y+ (height / 2), 
-							'L', x, y+ (height / 2), 
-							'Z'
-						]
+                    d: ['M', x - 6, y,
+                        'L', x, y - (height / 2) - 2,
+                        'L', x + width + 4, y - (height / 2) - 2,
+                        'L', x + width + 4, y + (height / 2),
+                        'L', x, y + (height / 2),
+                        'Z'
+                    ]
                 }, 0);
 
                 currentPriceIndicator.line.animate({
-                    d: ['M', lineFrom, y, 'L', x-6, y]
+                    d: ['M', lineFrom, y, 'L', x - 6, y]
                 }, 0);
 
                 // adjust
@@ -232,7 +232,7 @@
                 line: line
             }
         }
-    };
+    }
 
     /**
      * Convert dash style name to array to be used a the value
@@ -269,5 +269,5 @@
         }
 
         return value;
-    };
+    }
 }(Highcharts));
